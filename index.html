@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulador Sicoob Advocacia</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="favicon.png" type="image/png">
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen px-4">
+  <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-6xl">
+    <div class="flex justify-center mb-4">
+      <img src="sicoob.png" alt="Logo da Empresa" class="h-16 object-contain" />
+    </div>
+
+    <!-- <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Simulador PRICE</h1> -->
+
+    <form id="simuladorForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div>
+        <label for="valor" class="block text-sm font-medium text-gray-700">Valor do Empréstimo</label>
+        <input type="text" id="valor" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="R$ 0,00" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Juros ao mês (%)</label>
+        <input type="text" value="1.68" disabled class="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-500" />
+      </div>
+
+      <div>
+        <label for="parcelas" class="block text-sm font-medium text-gray-700">Quantidade de Parcelas</label>
+        <select id="parcelas" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+          <script>
+            for (let i = 1; i <= 48; i++) {
+              document.write(`<option value="${i}">${i}</option>`);
+            }
+          </script>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Data da 1ª Parcela</label>
+        <input type="text" id="dataParcela" disabled class="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-500" />
+      </div>
+
+      <div class="md:col-span-2">
+        <button type="submit" class="w-full bg-[#01998d] text-white py-2 rounded-md hover:brightness-90 transition">Calcular</button>
+      </div>
+    </form>
+
+    <div id="resultado" class="overflow-x-auto mt-6"></div>
+  </div>
+
+  <script>
+  const hoje = new Date();
+  hoje.setMonth(hoje.getMonth() + 3);
+  document.getElementById('dataParcela').value = hoje.toLocaleDateString('pt-BR');
+
+  const valorInput = document.getElementById('valor');
+  valorInput.addEventListener('input', function (e) {
+    let value = e.target.value.replace(/\D/g, '');
+    value = (parseInt(value) / 100).toFixed(2);
+    value = value.replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    e.target.value = 'R$ ' + value;
+  });
+
+  function getValorNumerico(mascara) {
+    return parseFloat(mascara.replace(/[^\d,]/g, '').replace(',', '.'));
+  }
+
+  function formatarMoeda(valor) {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(valor);
+  }
+
+  document.getElementById('simuladorForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const valor = getValorNumerico(document.getElementById('valor').value);
+    const parcelas = parseInt(document.getElementById('parcelas').value);
+    const taxa = 1.68 / 100;
+    const prestamista = 0.088;
+    const tomador = 1;
+
+    const dataSimulacao = new Date();
+    const dataParcela = new Date(hoje);
+    let totalFator = 0;
+    let datas = [];
+
+    let vencAnterior = null;
+
+    for (let i = 0; i < parcelas; i++) {
+      const vencAtual = new Date(dataParcela);
+      vencAtual.setMonth(vencAtual.getMonth() + i);
+
+      const diasIof = Math.round((vencAtual - dataSimulacao) / (1000 * 60 * 60 * 24));
+      let dias;
+
+      if (i === 0) {
+        dias = Math.round((dataParcela - dataSimulacao) / (1000 * 60 * 60 * 24));
+      } else {
+        dias = Math.round((vencAtual - vencAnterior) / (1000 * 60 * 60 * 24));
+      }
+
+      const fator = Math.pow(1 / (1 + taxa), diasIof / 30);
+      totalFator += fator;
+
+      datas.push({ vencimento: vencAtual, dias, diasIof });
+      vencAnterior = new Date(vencAtual);
+    }
+
+    const valorParcela = valor / totalFator;
+    let saldoAntes = valor;
+    let totalJuros = 0;
+    let totalIOF = 0;
+
+    let resultadoHTML = `
+      <h2 class="text-xl font-semibold mb-4">Tabela de Parcelas</h2>
+      <div class="overflow-x-auto">
+      <table class="min-w-full text-sm text-left text-gray-700 border border-gray-300 rounded-lg">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-4 py-2">#</th>
+            <th class="px-4 py-2">Vencimento</th>
+            <th class="px-4 py-2">Juros</th>
+            <th class="px-4 py-2">Amortização</th>
+            <th class="px-4 py-2">S. Prestamista</th>
+            <th class="px-4 py-2">Parcela+Prestamista</th>
+            <th class="px-4 py-2">Saldo Devedor</th>
+            <th class="px-4 py-2">Parcela</th>
+            <th class="px-4 py-2">IOF</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    datas.forEach((data, i) => {
+      const juros = saldoAntes * (Math.pow(1 + taxa, data.dias / 30) - 1);
+      const amortizacao = valorParcela - juros;
+      const seguro = saldoAntes * prestamista / 100;
+      const parcelaTotal = valorParcela + seguro;
+
+      let iof;
+      if (tomador === 1) {
+        iof = data.diasIof <= 365
+          ? (data.diasIof * 0.0082 * amortizacao) / 100
+          : (3.00 * amortizacao) / 100;
+      } else {
+        iof = data.diasIof <= 365
+          ? (data.diasIof * 0.0041 * amortizacao) / 100
+          : (1.5 * amortizacao) / 100;
+      }
+
+      totalJuros += juros;
+      totalIOF += iof;
+
+      resultadoHTML += `
+        <tr class="border-t">
+          <td class="px-4 py-2">${i + 1}</td>
+          <td class="px-4 py-2">${data.vencimento.toLocaleDateString('pt-BR')}</td>
+          <td class="px-4 py-2">${formatarMoeda(juros)}</td>
+          <td class="px-4 py-2">${formatarMoeda(amortizacao)}</td>
+          <td class="px-4 py-2">${formatarMoeda(seguro)}</td>
+          <td class="px-4 py-2">${formatarMoeda(parcelaTotal)}</td>
+          <td class="px-4 py-2">${formatarMoeda(saldoAntes)}</td>
+          <td class="px-4 py-2">${formatarMoeda(valorParcela)}</td>
+          <td class="px-4 py-2">${formatarMoeda(iof)}</td>
+        </tr>
+      `;
+
+      saldoAntes -= amortizacao;
+    });
+
+    const iofAdicional = valor * 0.01118;
+    const totalIOFCompleto = totalIOF + iofAdicional;
+    const totalPagar = valorParcela * parcelas;
+
+    resultadoHTML += `
+      </tbody></table></div>
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+        <div class="bg-gray-100 p-4 rounded-md">
+          <strong>Total a Pagar:</strong><br/>
+          ${formatarMoeda(totalPagar)}
+        </div>
+        <div class="bg-gray-100 p-4 rounded-md">
+          <strong>Total Juros:</strong><br/>
+          ${formatarMoeda(totalJuros)}
+        </div>
+        <div class="bg-gray-100 p-4 rounded-md">
+          <strong>Total IOF:</strong><br/>
+          ${formatarMoeda(totalIOFCompleto)}
+        </div>
+      </div>
+    `;
+
+    document.getElementById('resultado').innerHTML = resultadoHTML;
+  });
+</script>
+</body>
+</html>
