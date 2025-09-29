@@ -60,6 +60,19 @@
   </div>
 <script>
   const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  document.getElementById('dataParcela').value = hoje.toISOString().split('T')[0];
+
+  // Definindo limites mínimo e máximo
+  const limiteMinimo = new Date(hoje);
+  const limiteMaximo = new Date(hoje);
+  limiteMaximo.setMonth(limiteMaximo.getMonth() + 3);
+
+  document.getElementById('dataParcela').min = limiteMinimo.toISOString().split('T')[0];
+  document.getElementById('dataParcela').max = limiteMaximo.toISOString().split('T')[0];
+
+
+  // const hoje = new Date();
   hoje.setMonth(hoje.getMonth() + 3);
   document.getElementById('dataParcela').value = hoje.toISOString().split('T')[0];
 
