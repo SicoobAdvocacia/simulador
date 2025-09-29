@@ -141,11 +141,7 @@
           <tr>
             <th class="px-4 py-2">#</th>
             <th class="px-4 py-2">Vencimento</th>
-            <th class="px-4 py-2">Juros</th>
-            <th class="px-4 py-2">Amortização</th>
-            <th class="px-4 py-2">Saldo Devedor</th>
             <th class="px-4 py-2">Parcela</th>
-            <th class="px-4 py-2">IOF</th>
           </tr>
         </thead>
         <tbody>
@@ -175,11 +171,7 @@
         <tr class="border-t">
           <td class="px-4 py-2">${i + 1}</td>
           <td class="px-4 py-2">${data.vencimento.toLocaleDateString('pt-BR')}</td>
-          <td class="px-4 py-2">${formatarMoeda(juros)}</td>
-          <td class="px-4 py-2">${formatarMoeda(amortizacao)}</td>
-          <td class="px-4 py-2">${formatarMoeda(saldoAntes)}</td>
           <td class="px-4 py-2">${formatarMoeda(valorParcela)}</td>
-          <td class="px-4 py-2">${formatarMoeda(iof)}</td>
         </tr>
       `;
 
