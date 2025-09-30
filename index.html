@@ -5,16 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Simulador Sicoob Advocacia</title>
   <link rel="icon" href="favicon.png" type="image/png">
-  <script src="https://cdn.tailwindcss.com"></script>
   <script src="simulador.js" defer></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 flex items-center justify-center min-h-screen px-4">
-  <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-6xl">
-
+<body class="bg-gray-50 flex items-center justify-center min-h-screen px-4 overflow-x-auto">
+  <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-full md:max-w-3xl">
     <div class="relative flex justify-center mb-4">
         <img src="sicoob.png" alt="Logo da Empresa" class="h-16 object-contain" />
 
-        <div class="absolute right-0 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1">
+        <div class="md:absolute md:right-0 md:top-1/2 md:-translate-y-1/2 flex flex-col items-center gap-1 mt-4 md:mt-0">
             <!-- Botão WhatsApp -->
             <a href="https://wa.me/5548996373191?text=Olá!%20Gostaria%20de%20fazer%20uma%20simulação%20de%20crédito%20-%20OAB%20Refis." target="_blank"
             class="bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg p-3 flex items-center justify-center transition duration-300">
@@ -22,7 +21,6 @@
                 <path d="M20.52 3.48A11.94 11.94 0 0 0 12 0C5.37 0 .01 5.37.01 12c0 2.11.55 4.17 1.6 5.99L0 24l6.26-1.64A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.19-1.24-6.19-3.48-8.52zM12 22c-1.93 0-3.81-.56-5.42-1.61l-.39-.25-3.7.97.99-3.6-.26-.39A9.93 9.93 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.27-7.73c-.29-.14-1.7-.84-1.96-.94-.26-.1-.45-.14-.64.14-.19.29-.74.94-.91 1.13-.17.19-.34.21-.63.07-.29-.14-1.22-.45-2.33-1.44-.86-.77-1.44-1.72-1.61-2.01-.17-.29-.02-.45.13-.59.13-.13.29-.34.43-.51.14-.17.19-.29.29-.48.1-.19.05-.36-.02-.5-.07-.14-.64-1.54-.88-2.11-.23-.56-.47-.48-.64-.48h-.55c-.19 0-.5.07-.76.36-.26.29-1 1-1 2.43s1.03 2.82 1.18 3.02c.14.19 2.03 3.1 4.92 4.35.69.3 1.23.48 1.65.61.69.22 1.32.19 1.82.12.56-.08 1.7-.7 1.94-1.38.24-.68.24-1.26.17-1.38-.07-.12-.26-.19-.55-.33z"/>
             </svg>
             </a>
-
             <!-- Balãozinho abaixo -->
             <div class="bg-green-600 text-white text-xs px-3 py-1 rounded-full shadow-md">
             Contrate aqui
@@ -30,7 +28,7 @@
         </div>
     </div>
 
-    <form id="simuladorForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6" novalidate>
+    <form id="simuladorForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 space-y-4 md:space-y-0">
       <div>
         <label for="valor" class="block text-sm font-medium text-gray-700">Valor do Empréstimo</label>
         <input type="text" id="valor" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="R$ 0,00" />
