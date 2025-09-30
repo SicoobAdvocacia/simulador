@@ -2,15 +2,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
 
-  const dataParcelaInput = document.getElementById('dataParcela');
   const limiteMinimo = new Date(hoje);
   const limiteMaximo = new Date(hoje);
   limiteMaximo.setMonth(limiteMaximo.getMonth() + 3);
 
-  dataParcelaInput.min = limiteMinimo.toISOString().split('T')[0];
-  dataParcelaInput.max = limiteMaximo.toISOString().split('T')[0];
-  hoje.setMonth(hoje.getMonth() + 3);
-  dataParcelaInput.value = hoje.toISOString().split('T')[0];
+  const minDate = limiteMinimo.toISOString().split('T')[0];
+  const maxDate = limiteMaximo.toISOString().split('T')[0];
+  const defaultDate = maxDate;
+
+  // Recria o campo de data com limites visíveis
+  const campoAntigo = document.getElementById('dataParcela');
+  const novoInput = document.createElement('input');
+  novoInput.type = 'date';
+  novoInput.id = 'dataParcela';
+  novoInput.className = campoAntigo.className;
+  novoInput.min = minDate;
+  novoInput.max = maxDate;
+  novoInput.value = defaultDate;
+  campoAntigo.parentNode.replaceChild(novoInput, campoAntigo);
 
   const parcelasSelect = document.getElementById('parcelas');
   for (let i = 1; i <= 48; i++) {
@@ -60,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const dataSimulacao = new Date();
     dataSimulacao.setHours(0, 0, 0, 0);
+    const dataParcelaInput = document.getElementById('dataParcela');
     const dataParcela = new Date(dataParcelaInput.value);
     dataParcela.setHours(0, 0, 0, 0);
 
