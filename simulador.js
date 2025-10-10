@@ -1,5 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const dataSimulacao = document.getElementById("dataSimulacao");
   const hoje = new Date();
+  const opcoes = { day: '2-digit', month: '2-digit', year: 'numeric' };
+  const dataFormatada = hoje.toLocaleDateString('pt-BR', opcoes);
+  dataSimulacao.textContent = `Simulação realizada em: ${dataFormatada}`;
+
+  // const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
 
   const limiteMinimo = new Date(hoje);
