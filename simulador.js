@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const valor = getValorNumerico(valorInput.value);
     const parcelas = parseInt(parcelasSelect.value);
-    const taxa = 1.68 / 100;
+    const taxa = 1.65 / 100;
     const prestamista = 0.088;
     const tomador = 1;
 
